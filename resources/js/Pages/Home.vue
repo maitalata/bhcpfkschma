@@ -12,9 +12,14 @@ const selectedCommunity = ref('');
 const step = ref(1);
 const selectedLocalGovernment = ref('');
 const householdNum = ref(1)
+const selectedBeneficiaries = ref([]);
 
 const nextStep = () => {
     step.value += 1;
+    // Initialize selectedBeneficiaries array based on householdNum when advancing to step 2
+    if (selectedBeneficiaries.value.length < householdNum.value) {
+        selectedBeneficiaries.value = Array(householdNum.value).fill(null);
+    }
 }
 
 const previousStep = () => {
@@ -167,7 +172,7 @@ const fetchBeneficiaries = () => {
                         </el-select>
                     </div>
 
-                   
+
 
 
 
@@ -186,7 +191,7 @@ const fetchBeneficiaries = () => {
             </div>
 
             <br>
-         
+
             <!-- Next Button at bottom right corner -->
             <div class="flex justify-center">
                 <!-- <el-button type="primary" :disabled="!selectedLGA" @click="previousStep" >Previous</el-button> -->
@@ -196,7 +201,7 @@ const fetchBeneficiaries = () => {
         </div>
 
         <div v-if="step === 2" >
-            <el-card  v-for="x in householdNum" :key="x" class="m-4" >
+            <el-card  v-for="(x, index) in householdNum" :key="x" class="m-4" >
                 <template #header>
                   <div class="card-header">
                     <span>Beneficiary {{ x }}</span>
@@ -204,7 +209,7 @@ const fetchBeneficiaries = () => {
                 </template>
                 <p>Select Beneficiary
                 <el-select
-                    v-model="value"
+                    v-model="selectedBeneficiaries[index]"
                     filterable
                     placeholder="Select"
                     style="width: 240px"
@@ -228,7 +233,7 @@ const fetchBeneficiaries = () => {
         </div>
 
         <!-- <div v-if="selectedLGA">
-            
+
 
             <br> -->
 
