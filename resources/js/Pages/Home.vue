@@ -4,6 +4,17 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
+const yesornoSelectBoxOptions = [
+    { value: 'Yes', label: 'Yes' },
+    { value: 'No', label: 'No' },
+];
+
+const beneficiaryStatusSelectBoxOptions = [
+    { value: 'Dead', label: 'Dead' },
+    { value: 'Relocated Permanently', label: 'Relocated Permanently' },
+    { value: 'Cannot be located', label: 'Cannot be located' },
+];
+
 const selectedLGA = ref(false);
 const hasSelectedWard = ref(false);
 const hasSelectedCommunity = ref(false);
@@ -13,6 +24,15 @@ const step = ref(1);
 const selectedLocalGovernment = ref('');
 const householdNum = ref(1)
 const selectedBeneficiaries = ref([]);
+
+const sightedBeneficiary = ref([]);
+const beneficiaryStatus = ref([]);
+const newLocation = ref([]);
+const beneficiaryHasNin = ref([]);
+const beneficiaryNin = ref([]);
+const beneficiaryTrackingId = ref([]);
+const beneficiaryPsrNumber = ref([]);
+const beneficiaryKschmaNumber = ref([]);
 
 const nextStep = () => {
     step.value += 1;
@@ -111,8 +131,7 @@ const fetchBeneficiaries = () => {
 <template>
     <div class="">
         <div class="mb-10">
-            <h1 class="p-8 text-xl text-center">KANO STATE BASIC HEALTHCARE PROVISION FUND ENROLLEE VERIFICATION
-                EXERCISE FORM</h1>
+            <h1 class="p-8 text-xl text-center">KANO STATE BASIC HEALTHCARE PROVISION FUND ENROLLEE VERIFICATION EXERCISE FORM</h1>
         </div>
         <br>
 
@@ -172,10 +191,6 @@ const fetchBeneficiaries = () => {
                         </el-select>
                     </div>
 
-
-
-
-
                 </div>
                 <br>
             </div>
@@ -223,13 +238,115 @@ const fetchBeneficiaries = () => {
                   </el-select>
                 </p>
 
+                <br>
+
+                <div class="flex justify-around text-center">
+                    <div class="">
+                        <label for="lga" class="block text-sm font-medium text-gray-700">Were you able to sight the beneficiary?</label>
+                        <el-select v-model="sightedBeneficiary[index]" placeholder="Please Select" size="large"
+                            style="width: 240px;color:black;" class="text-black" >
+
+                            <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
+                                :value="item.value" />
+                        </el-select>
+                    </div>
+                </div>
+
+                <div v-if="sightedBeneficiary[index] === 'No'" >
+                    <br>
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">If the beneficiary was not found, what is his/her status?  </label>
+                            <el-select v-model="beneficiaryStatus[index]" placeholder="Please Select" size="large"
+                                style="width: 240px;color:black;" class="text-black" >
+    
+                                <el-option v-for="item in beneficiaryStatusSelectBoxOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div v-if="beneficiaryStatus[index] === 'Relocated Permanently'" >
+                        <div class="flex justify-around text-center">
+                            <div class="">
+                                <label for="lga" class="block text-sm font-medium text-gray-700">If the beneficiary has relocated permanently, indicate the new location of the beneficiary</label>
+                                <el-input placeholder="Please provide the new address of the beneficiary" size="large"
+                                    style="width: 240px;color:black;" v-model="newLocation[index]" class="text-black" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="sightedBeneficiary[index] === 'Yes'" >
+                    <br>
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Did the beneficiary has NIN </label>
+                            <el-select v-model="beneficiaryHasNin[index]" placeholder="Please Select" size="large"
+                                style="width: 240px;color:black;" class="text-black" >
+    
+                                <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div v-if="beneficiaryHasNin[index] === 'Yes'" >
+                        <div class="flex justify-around text-center">
+                            <div class="">
+                                <label for="lga" class="block text-sm font-medium text-gray-700">NIN Number</label>
+                                <el-input placeholder="Please provide beneficiaries NIN Number" size="large"
+                                    style="width: 240px;color:black;" v-model="beneficiaryNin[index]" class="text-black" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Beneficiary Tracking ID Number</label>
+                            <el-input placeholder="Please provide beneficiaries tracking id number" size="large"
+                                style="width: 240px;color:black;" v-model="beneficiaryTrackingId[index]" class="text-black" />
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">PSR Number</label>
+                            <el-input placeholder="Beneficiaries PSR number if available" size="large"
+                                style="width: 240px;color:black;" v-model="beneficiaryPsrNumber[index]" class="text-black" />
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">KSCHMA Number</label>
+                            <el-input placeholder="Beneficiaries KSCHMA Number if avilable" size="large"
+                                style="width: 240px;color:black;" v-model="beneficiaryKschmaNumber[index]" class="text-black" />
+                        </div>
+                    </div>
+
+                </div>
+
+
                 <template #footer></template>
               </el-card>
 
               <div class="flex justify-center">
                 <el-button type="primary" @click="previousStep" >Previous</el-button>
 
+         
+                <br>
+
             </div>
+            <br>
         </div>
 
         <!-- <div v-if="selectedLGA">
