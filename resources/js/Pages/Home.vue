@@ -259,7 +259,7 @@ const fetchBeneficiaries = () => {
                             <label for="lga" class="block text-sm font-medium text-gray-700">If the beneficiary was not found, what is his/her status?  </label>
                             <el-select v-model="beneficiaryStatus[index]" placeholder="Please Select" size="large"
                                 style="width: 240px;color:black;" class="text-black" >
-    
+
                                 <el-option v-for="item in beneficiaryStatusSelectBoxOptions" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
@@ -286,7 +286,7 @@ const fetchBeneficiaries = () => {
                             <label for="lga" class="block text-sm font-medium text-gray-700">Did the beneficiary has NIN </label>
                             <el-select v-model="beneficiaryHasNin[index]" placeholder="Please Select" size="large"
                                 style="width: 240px;color:black;" class="text-black" >
-    
+
                                 <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
@@ -332,9 +332,7 @@ const fetchBeneficiaries = () => {
                                 style="width: 240px;color:black;" v-model="beneficiaryKschmaNumber[index]" class="text-black" />
                         </div>
                     </div>
-
                 </div>
-
 
                 <template #footer></template>
               </el-card>
@@ -342,7 +340,7 @@ const fetchBeneficiaries = () => {
               <div class="flex justify-center">
                 <el-button type="primary" @click="previousStep" >Previous</el-button>
 
-         
+
                 <br>
 
             </div>

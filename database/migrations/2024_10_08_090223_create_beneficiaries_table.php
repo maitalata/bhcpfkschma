@@ -23,12 +23,13 @@ return new class extends Migration
             $table->string('beneficiary_id');
             $table->string('entity_type');
             $table->string('gender');
+            $table->string('date_of_birth')->nullable();
             $table->string('nin')->nullable();
             $table->string('psn')->nullable();
             $table->foreignId('ward_id')->constrained();
-            $table->foreignId('household_id')->constrained();
-            $table->foreignId('community_id')->constrained();
-            $table->foreignId('health_facility_id')->constrained();
+            $table->foreignId('household_id')->nullable()->constrained();
+            $table->foreignId('community_id')->nullable()->constrained();
+            $table->foreignId('health_facility_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
