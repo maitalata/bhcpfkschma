@@ -41,6 +41,14 @@ Route::get('fetchBeneficiaries/{ward_id}', function ($ward_id) {
     return response()->json($options);
 })->name('fetchBeneficiaries');
 
+Route::get('fetchFacilities/{ward_id}', function ($ward_id) {
+    $options = DB::table('health_facilities')
+        ->where('ward_id', $ward_id)
+        ->get();
+    // $options = [];
+    return response()->json($options);
+})->name('fetchFacilities');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

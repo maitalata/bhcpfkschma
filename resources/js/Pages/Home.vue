@@ -15,6 +15,14 @@ const beneficiaryStatusSelectBoxOptions = [
     { value: 'Cannot be located', label: 'Cannot be located' },
 ];
 
+const trnasportFaresSelectBoxOptions = [
+    { value: '200 - 500', label: '200 - 500' },
+    { value: '500 - 1000', label: '500 - 1000' },
+    { value: '1000 - 1500', label: '1000 - 1500' },
+    { value: '1500 - 2000', label: '1500 - 2000' },
+    { value: 'Over 2000', label: 'Over 2000' },
+];
+
 const selectedLGA = ref(false);
 const hasSelectedWard = ref(false);
 const hasSelectedCommunity = ref(false);
@@ -33,6 +41,13 @@ const beneficiaryNin = ref([]);
 const beneficiaryTrackingId = ref([]);
 const beneficiaryPsrNumber = ref([]);
 const beneficiaryKschmaNumber = ref([]);
+const selectedFacility = ref([]);
+const trekkableInfo = ref([]);
+const transportFareInfo = ref([]);
+const beneficiaryWantToChangeFacility = ref([]);
+const primaryReasonForFacilityChange = ref([]);
+const beneficiaryEeverAccessedServiceInAssignedPHC = ref([]);
+const educatedBeneficiaryAboutBhcpf = ref([]);
 
 const nextStep = () => {
     step.value += 1;
@@ -65,6 +80,7 @@ onMounted(() => {
 const secondOptions = ref([]);
 const thirdOptions = ref([]);
 const beneficiaries = ref([]);
+const facilities = ref([]);
 
 const fetchWards = () => {
     if (selectedLocalGovernment.value) {
@@ -125,6 +141,38 @@ const fetchBeneficiaries = () => {
     } else {
         console.error('Community is not selected');
     }
+
+    if (selectedWard.value) {
+        axios.get(`/fetchFacilities/${selectedWard.value}`)
+            .then((response) => {
+                console.log('Options fetched:', response.data);
+                facilities.value = response.data; // Assigning the fetched communities
+                // hasSelectedCommunity.value = true;
+                //selectedWard.value = '';
+            })
+            .catch((error) => {
+                console.error('Error fetching options:', error);
+            });
+    } else {
+        console.error('Community is not selected');
+    }
+}
+
+const fetchFacilities = () => {
+    if (selectedWard.value) {
+        axios.get(`/fetchFacilities/${selectedWard.value}`)
+            .then((response) => {
+                console.log('Options fetched:', response.data);
+                beneficiaries.value = response.data; // Assigning the fetched communities
+                // hasSelectedCommunity.value = true;
+                //selectedWard.value = '';
+            })
+            .catch((error) => {
+                console.error('Error fetching options:', error);
+            });
+    } else {
+        console.error('Community is not selected');
+    }
 }
 
 </script>
@@ -140,18 +188,6 @@ const fetchBeneficiaries = () => {
             <div class="flex justify-around text-center">
                 <div class="">
                     <label for="lga" class="block text-sm font-medium text-gray-700">Local Government</label>
-                    <!-- <select id="lga" name="lga" autocomplete="lga" @change="LGASelected"
-                        class="border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="">Select Local Government</option>
-                        <option value="1">Dala</option>
-                        <option value="2">Fagge</option>
-                        <option value="3">Gwale</option>
-                        <option value="4">Kano Municipal</option>
-                        <option value="5">Nassarawa</option>
-                        <option value="6">Tarauni</option>
-                        <option value="7">Kumbotso</option>
-                        <option value="8">Ungogo</option>
-                    </select> -->
                     <el-select v-model="selectedLocalGovernment" placeholder="Select Local Government" size="large"
                         style="width: 240px;color:black;" class="text-black" @change="fetchWards">
 
@@ -305,6 +341,8 @@ const fetchBeneficiaries = () => {
                         </div>
                     </div>
 
+                    <br >
+
                     <div class="flex justify-around text-center">
                         <div class="">
                             <label for="lga" class="block text-sm font-medium text-gray-700">Beneficiary Tracking ID Number</label>
@@ -332,6 +370,103 @@ const fetchBeneficiaries = () => {
                                 style="width: 240px;color:black;" v-model="beneficiaryKschmaNumber[index]" class="text-black" />
                         </div>
                     </div>
+
+                    <br>
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Assigned Facility</label>
+                            <el-select v-model="selectedFacility[index]" placeholder="Select Beneficiaries Assigned Facility" size="large"
+                                style="width: 240px;color:black;" class="text-black" >
+
+                                <el-option v-for="item in facilities" :key="item.id" :label="item.name"
+                                    :value="item.id" />
+                            </el-select>
+                        </div>
+                    </div>
+
+                    <br >
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Is the Distance to Assigned PHC Trekkable </label>
+                            <el-select v-model="trekkableInfo[index]" placeholder="Please Select" size="large"
+                                style="width: 240px;color:black;" class="text-black" >
+
+                                <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </div>
+                    </div>
+
+                    <div v-if="trekkableInfo[index] === 'No'" >
+                        <br>
+                        <div class="flex justify-around text-center">
+                            <div class="">
+                                <label for="lga" class="block text-sm font-medium text-gray-700">Transport Fare to Assigned Facility</label>
+                                <el-select v-model="transportFareInfo[index]" placeholder="Please Select" size="large"
+                                    style="width: 240px;color:black;" class="text-black" >
+    
+                                    <el-option v-for="item in trnasportFaresSelectBoxOptions" :key="item.value" :label="item.label"
+                                        :value="item.value" />
+                                </el-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Does the beneficiary want to change their assigned PHC </label>
+                            <el-select v-model="beneficiaryWantToChangeFacility[index]" placeholder="Please Select" size="large"
+                                style="width: 240px;color:black;" class="text-black" >
+
+                                <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </div>
+                    </div>
+
+                    <div v-if="beneficiaryWantToChangeFacility[index] === 'Yes'" >
+                        <br>
+                        <div class="flex justify-around text-center">
+                            <div class="">
+                                <label for="lga" class="block text-sm font-medium text-gray-700">What is the primary reason the Beneficiary want to change their assigned facility</label>
+                                <el-input placeholder="Please Enter The Reason" size="large"
+                                    style="width: 240px;color:black;" v-model="primaryReasonForFacilityChange[index]" class="text-black" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Does the beneficiary ever accessed healthcare service at assigned phc </label>
+                            <el-select v-model="beneficiaryEeverAccessedServiceInAssignedPHC[index]" placeholder="Please Select" size="large"
+                                style="width: 240px;color:black;" class="text-black" >
+
+                                <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Did you educate the beneficiary about BHCPF during the exercise </label>
+                            <el-select v-model="educatedBeneficiaryAboutBhcpf[index]" placeholder="Please Select" size="large"
+                                style="width: 240px;color:black;" class="text-black" >
+
+                                <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </div>
+                    </div>
+
                 </div>
 
                 <template #footer></template>
