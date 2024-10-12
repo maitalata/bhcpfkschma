@@ -179,7 +179,8 @@ const fetchFacilities = () => {
 <template>
     <div class="">
         <div class="mb-10">
-            <h1 class="p-8 text-xl text-center">KANO STATE BASIC HEALTHCARE PROVISION FUND ENROLLEE VERIFICATION EXERCISE FORM</h1>
+            <h1 class="p-8 text-xl text-center">KANO STATE BASIC HEALTHCARE PROVISION FUND ENROLLEE VERIFICATION
+                EXERCISE FORM</h1>
         </div>
         <br>
 
@@ -220,7 +221,7 @@ const fetchFacilities = () => {
                     <div class="">
                         <label for="communities" class="block text-sm font-medium text-gray-700">Community</label>
                         <el-select v-model="selectedCommunity" placeholder="Select Community" size="large"
-                            style="width: 240px;color:black;" class="text-black" @change="fetchBeneficiaries" >
+                            style="width: 240px;color:black;" class="text-black" @change="fetchBeneficiaries">
 
                             <el-option v-for="item in thirdOptions" :key="item.id" :label="item.name"
                                 :value="item.id" />
@@ -234,7 +235,8 @@ const fetchFacilities = () => {
             <div v-if="hasSelectedWard">
                 <div class="flex justify-around text-center">
                     <div class="">
-                        <label for="numberInHousehold" class="block text-sm font-medium text-gray-700">How many benefiacries are in this household</label>
+                        <label for="numberInHousehold" class="block text-sm font-medium text-gray-700">How many
+                            benefiacries are in this household</label>
                         <el-input-number v-model="householdNum" :min="1" :max="20" />
                     </div>
                 </div>
@@ -251,36 +253,21 @@ const fetchFacilities = () => {
             </div>
         </div>
 
-        <div v-if="step === 2" >
-            <el-card  v-for="(x, index) in householdNum" :key="x" class="m-4" >
+        <div v-if="step === 2">
+            <el-card v-for="(x, index) in householdNum" :key="x" class="m-4">
                 <template #header>
-                  <div class="card-header">
-                    <span>Beneficiary {{ x }}</span>
-                  </div>
+                    <div class="card-header">
+                        <span>Beneficiary {{ x }}</span>
+                    </div>
                 </template>
-                <p>Select Beneficiary
-                <el-select
-                    v-model="selectedBeneficiaries[index]"
-                    filterable
-                    placeholder="Select"
-                    style="width: 240px"
-                  >
-                    <el-option
-                      v-for="item in beneficiaries"
-                      :key="item.id"
-                      :label="`${item.first_name} ${item.surname || ''} ${item.other_name || ''}`.trim()"
-                      :value="item.id"
-                    />
-                  </el-select>
-                </p>
 
-                <br>
 
                 <div class="flex justify-around text-center">
                     <div class="">
-                        <label for="lga" class="block text-sm font-medium text-gray-700">Were you able to sight the beneficiary?</label>
+                        <label for="lga" class="block text-sm font-medium text-gray-700">Were you able to sight the
+                            beneficiary?</label>
                         <el-select v-model="sightedBeneficiary[index]" placeholder="Please Select" size="large"
-                            style="width: 240px;color:black;" class="text-black" >
+                            style="width: 240px;color:black;" class="text-black">
 
                             <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
                                 :value="item.value" />
@@ -288,26 +275,30 @@ const fetchFacilities = () => {
                     </div>
                 </div>
 
-                <div v-if="sightedBeneficiary[index] === 'No'" >
+                <div v-if="sightedBeneficiary[index] === 'No'">
                     <br>
                     <div class="flex justify-around text-center">
                         <div class="">
-                            <label for="lga" class="block text-sm font-medium text-gray-700">If the beneficiary was not found, what is his/her status?  </label>
+                            <label for="lga" class="block text-sm font-medium text-gray-700">If the beneficiary was not
+                                found, what is
+                                his/her status? </label>
                             <el-select v-model="beneficiaryStatus[index]" placeholder="Please Select" size="large"
-                                style="width: 240px;color:black;" class="text-black" >
+                                style="width: 240px;color:black;" class="text-black">
 
-                                <el-option v-for="item in beneficiaryStatusSelectBoxOptions" :key="item.value" :label="item.label"
-                                    :value="item.value" />
+                                <el-option v-for="item in beneficiaryStatusSelectBoxOptions" :key="item.value"
+                                    :label="item.label" :value="item.value" />
                             </el-select>
                         </div>
                     </div>
 
                     <br>
 
-                    <div v-if="beneficiaryStatus[index] === 'Relocated Permanently'" >
+                    <div v-if="beneficiaryStatus[index] === 'Relocated Permanently'">
                         <div class="flex justify-around text-center">
                             <div class="">
-                                <label for="lga" class="block text-sm font-medium text-gray-700">If the beneficiary has relocated permanently, indicate the new location of the beneficiary</label>
+                                <label for="lga" class="block text-sm font-medium text-gray-700">If the beneficiary has
+                                    relocated
+                                    permanently, indicate the new location of the beneficiary</label>
                                 <el-input placeholder="Please provide the new address of the beneficiary" size="large"
                                     style="width: 240px;color:black;" v-model="newLocation[index]" class="text-black" />
                             </div>
@@ -315,13 +306,32 @@ const fetchFacilities = () => {
                     </div>
                 </div>
 
-                <div v-if="sightedBeneficiary[index] === 'Yes'" >
+                <br>
+
+                <div class="flex justify-around text-center">
+                    <div class="">
+                        <label for="lga" class="block text-sm font-medium text-gray-700">Select Beneficiary</label>
+                        <el-select v-model="selectedBeneficiaries[index]" filterable placeholder="Select"
+                            style="width: 240px">
+                            <el-option v-for="item in beneficiaries" :key="item.id"
+                                :label="`${item.first_name} ${item.surname || ''} ${item.other_name || ''}`.trim()"
+                                :value="item.id" />
+                        </el-select>
+                    </div>
+                </div>
+
+                <br>
+
+
+
+                <div v-if="sightedBeneficiary[index] === 'Yes'">
                     <br>
                     <div class="flex justify-around text-center">
                         <div class="">
-                            <label for="lga" class="block text-sm font-medium text-gray-700">Did the beneficiary has NIN </label>
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Did the beneficiary has NIN
+                            </label>
                             <el-select v-model="beneficiaryHasNin[index]" placeholder="Please Select" size="large"
-                                style="width: 240px;color:black;" class="text-black" >
+                                style="width: 240px;color:black;" class="text-black">
 
                                 <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
                                     :value="item.value" />
@@ -331,23 +341,26 @@ const fetchFacilities = () => {
 
                     <br>
 
-                    <div v-if="beneficiaryHasNin[index] === 'Yes'" >
+                    <div v-if="beneficiaryHasNin[index] === 'Yes'">
                         <div class="flex justify-around text-center">
                             <div class="">
                                 <label for="lga" class="block text-sm font-medium text-gray-700">NIN Number</label>
                                 <el-input placeholder="Please provide beneficiaries NIN Number" size="large"
-                                    style="width: 240px;color:black;" v-model="beneficiaryNin[index]" class="text-black" />
+                                    style="width: 240px;color:black;" v-model="beneficiaryNin[index]"
+                                    class="text-black" />
                             </div>
                         </div>
                     </div>
 
-                    <br >
+                    <br>
 
                     <div class="flex justify-around text-center">
                         <div class="">
-                            <label for="lga" class="block text-sm font-medium text-gray-700">Beneficiary Tracking ID Number</label>
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Beneficiary Tracking ID
+                                Number</label>
                             <el-input placeholder="Please provide beneficiaries tracking id number" size="large"
-                                style="width: 240px;color:black;" v-model="beneficiaryTrackingId[index]" class="text-black" />
+                                style="width: 240px;color:black;" v-model="beneficiaryTrackingId[index]"
+                                class="text-black" />
                         </div>
                     </div>
 
@@ -357,7 +370,8 @@ const fetchFacilities = () => {
                         <div class="">
                             <label for="lga" class="block text-sm font-medium text-gray-700">PSR Number</label>
                             <el-input placeholder="Beneficiaries PSR number if available" size="large"
-                                style="width: 240px;color:black;" v-model="beneficiaryPsrNumber[index]" class="text-black" />
+                                style="width: 240px;color:black;" v-model="beneficiaryPsrNumber[index]"
+                                class="text-black" />
                         </div>
                     </div>
 
@@ -367,7 +381,8 @@ const fetchFacilities = () => {
                         <div class="">
                             <label for="lga" class="block text-sm font-medium text-gray-700">KSCHMA Number</label>
                             <el-input placeholder="Beneficiaries KSCHMA Number if avilable" size="large"
-                                style="width: 240px;color:black;" v-model="beneficiaryKschmaNumber[index]" class="text-black" />
+                                style="width: 240px;color:black;" v-model="beneficiaryKschmaNumber[index]"
+                                class="text-black" />
                         </div>
                     </div>
 
@@ -376,8 +391,9 @@ const fetchFacilities = () => {
                     <div class="flex justify-around text-center">
                         <div class="">
                             <label for="lga" class="block text-sm font-medium text-gray-700">Assigned Facility</label>
-                            <el-select v-model="selectedFacility[index]" placeholder="Select Beneficiaries Assigned Facility" size="large"
-                                style="width: 240px;color:black;" class="text-black" >
+                            <el-select v-model="selectedFacility[index]"
+                                placeholder="Select Beneficiaries Assigned Facility" size="large"
+                                style="width: 240px;color:black;" class="text-black">
 
                                 <el-option v-for="item in facilities" :key="item.id" :label="item.name"
                                     :value="item.id" />
@@ -385,13 +401,15 @@ const fetchFacilities = () => {
                         </div>
                     </div>
 
-                    <br >
+                    <br>
 
                     <div class="flex justify-around text-center">
                         <div class="">
-                            <label for="lga" class="block text-sm font-medium text-gray-700">Is the Distance to Assigned PHC Trekkable </label>
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Is the Distance to Assigned
+                                PHC Trekkable
+                            </label>
                             <el-select v-model="trekkableInfo[index]" placeholder="Please Select" size="large"
-                                style="width: 240px;color:black;" class="text-black" >
+                                style="width: 240px;color:black;" class="text-black">
 
                                 <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
                                     :value="item.value" />
@@ -399,16 +417,18 @@ const fetchFacilities = () => {
                         </div>
                     </div>
 
-                    <div v-if="trekkableInfo[index] === 'No'" >
+                    <div v-if="trekkableInfo[index] === 'No'">
                         <br>
                         <div class="flex justify-around text-center">
                             <div class="">
-                                <label for="lga" class="block text-sm font-medium text-gray-700">Transport Fare to Assigned Facility</label>
+                                <label for="lga" class="block text-sm font-medium text-gray-700">Transport Fare to
+                                    Assigned
+                                    Facility</label>
                                 <el-select v-model="transportFareInfo[index]" placeholder="Please Select" size="large"
-                                    style="width: 240px;color:black;" class="text-black" >
-    
-                                    <el-option v-for="item in trnasportFaresSelectBoxOptions" :key="item.value" :label="item.label"
-                                        :value="item.value" />
+                                    style="width: 240px;color:black;" class="text-black">
+
+                                    <el-option v-for="item in trnasportFaresSelectBoxOptions" :key="item.value"
+                                        :label="item.label" :value="item.value" />
                                 </el-select>
                             </div>
                         </div>
@@ -418,9 +438,11 @@ const fetchFacilities = () => {
 
                     <div class="flex justify-around text-center">
                         <div class="">
-                            <label for="lga" class="block text-sm font-medium text-gray-700">Does the beneficiary want to change their assigned PHC </label>
-                            <el-select v-model="beneficiaryWantToChangeFacility[index]" placeholder="Please Select" size="large"
-                                style="width: 240px;color:black;" class="text-black" >
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Does the beneficiary want
+                                to change their
+                                assigned PHC </label>
+                            <el-select v-model="beneficiaryWantToChangeFacility[index]" placeholder="Please Select"
+                                size="large" style="width: 240px;color:black;" class="text-black">
 
                                 <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
                                     :value="item.value" />
@@ -428,13 +450,16 @@ const fetchFacilities = () => {
                         </div>
                     </div>
 
-                    <div v-if="beneficiaryWantToChangeFacility[index] === 'Yes'" >
+                    <div v-if="beneficiaryWantToChangeFacility[index] === 'Yes'">
                         <br>
                         <div class="flex justify-around text-center">
                             <div class="">
-                                <label for="lga" class="block text-sm font-medium text-gray-700">What is the primary reason the Beneficiary want to change their assigned facility</label>
+                                <label for="lga" class="block text-sm font-medium text-gray-700">What is the primary
+                                    reason the
+                                    Beneficiary want to change their assigned facility</label>
                                 <el-input placeholder="Please Enter The Reason" size="large"
-                                    style="width: 240px;color:black;" v-model="primaryReasonForFacilityChange[index]" class="text-black" />
+                                    style="width: 240px;color:black;" v-model="primaryReasonForFacilityChange[index]"
+                                    class="text-black" />
                             </div>
                         </div>
                     </div>
@@ -443,9 +468,12 @@ const fetchFacilities = () => {
 
                     <div class="flex justify-around text-center">
                         <div class="">
-                            <label for="lga" class="block text-sm font-medium text-gray-700">Does the beneficiary ever accessed healthcare service at assigned phc </label>
-                            <el-select v-model="beneficiaryEeverAccessedServiceInAssignedPHC[index]" placeholder="Please Select" size="large"
-                                style="width: 240px;color:black;" class="text-black" >
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Does the beneficiary ever
+                                accessed
+                                healthcare service at assigned phc </label>
+                            <el-select v-model="beneficiaryEeverAccessedServiceInAssignedPHC[index]"
+                                placeholder="Please Select" size="large" style="width: 240px;color:black;"
+                                class="text-black">
 
                                 <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
                                     :value="item.value" />
@@ -457,9 +485,11 @@ const fetchFacilities = () => {
 
                     <div class="flex justify-around text-center">
                         <div class="">
-                            <label for="lga" class="block text-sm font-medium text-gray-700">Did you educate the beneficiary about BHCPF during the exercise </label>
-                            <el-select v-model="educatedBeneficiaryAboutBhcpf[index]" placeholder="Please Select" size="large"
-                                style="width: 240px;color:black;" class="text-black" >
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Did you educate the
+                                beneficiary about BHCPF
+                                during the exercise </label>
+                            <el-select v-model="educatedBeneficiaryAboutBhcpf[index]" placeholder="Please Select"
+                                size="large" style="width: 240px;color:black;" class="text-black">
 
                                 <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
                                     :value="item.value" />
@@ -470,10 +500,10 @@ const fetchFacilities = () => {
                 </div>
 
                 <template #footer></template>
-              </el-card>
+            </el-card>
 
-              <div class="flex justify-center">
-                <el-button type="primary" @click="previousStep" >Previous</el-button>
+            <div class="flex justify-center">
+                <el-button type="primary" @click="previousStep">Previous</el-button>
 
 
                 <br>
