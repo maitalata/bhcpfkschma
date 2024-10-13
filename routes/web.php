@@ -42,9 +42,34 @@ Route::get('fetchBeneficiaries/{ward_id}', function ($ward_id) {
 })->name('fetchBeneficiaries');
 
 Route::get('fetchFacilities/{ward_id}', function ($ward_id) {
-    $options = DB::table('health_facilities')
-        ->where('ward_id', $ward_id)
+
+    //select all wards in the local government of the selected ward
+    $ward = DB::table('wards')
+        ->where('id', $ward_id)
+        ->first();
+
+    $local_government_id = $ward->local_government_id;
+    $wards = DB::table('wards')
+        ->where('local_government_id', $local_government_id)
         ->get();
+    
+    // dd($wards);
+
+    // create array of the wards in the local government
+    $ward_ids = [];
+    foreach ($wards as $ward) {
+        array_push($ward_ids, $ward->id);
+    }
+
+    //select all health facilities in the wards
+    $options = DB::table('health_facilities')
+        ->whereIn('ward_id', $ward_ids)
+        ->get();
+
+
+    // $options = DB::table('health_facilities')
+    //     ->where('ward_id', $ward_id)
+    //     ->get();
     // $options = [];
     return response()->json($options);
 })->name('fetchFacilities');
