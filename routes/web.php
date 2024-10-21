@@ -52,7 +52,7 @@ Route::get('fetchFacilities/{ward_id}', function ($ward_id) {
     $wards = DB::table('wards')
         ->where('local_government_id', $local_government_id)
         ->get();
-    
+
     // dd($wards);
 
     // create array of the wards in the local government
@@ -73,6 +73,67 @@ Route::get('fetchFacilities/{ward_id}', function ($ward_id) {
     // $options = [];
     return response()->json($options);
 })->name('fetchFacilities');
+
+Route::get('getTotalNumberOfAllHouseholds', function () {
+    $total = DB::table('households')
+        ->count();
+    return response()->json($total);
+})->name('getTotalNumberOfAllHouseholds');
+
+// submit household and return the id of the household added [name, community_id]
+Route::post('submitHousehold', function () {
+    $data = request()->validate([
+        'name' => 'required',
+        'community_id' => 'required',
+    ]);
+    
+        $household = DB::table('households')
+            ->insertGetId([
+                'name' => $data['name'],
+                'community_id' => $data['community_id'],
+        ]);
+
+    return response()->json($household);
+})->name('submitHousehold');
+
+// update beneficiary to reflect the household id, community id and facility id
+Route::post('updateBeneficiary', function () {
+    $data = request()->validate([
+        'id' => 'required',
+        'household_id' => 'required',
+        'community_id' => 'required',
+        'facility_id' => 'nullable',
+    ]);
+
+    $beneficiary = DB::table('beneficiaries')
+        ->where('id', $data['id'])
+        ->update([
+            'household_id' => $data['household_id'],
+            'community_id' => $data['community_id'],
+            'health_facility_id' => $data['facility_id'] ?? null,
+        ]);
+
+    return response()->json($beneficiary);
+})->name('updateBeneficiary');
+
+
+Route::post('submitVerification', function () {
+    $data = request()->validate([
+        'local_government' => 'required',
+        'ward' => 'required',
+        'community' => 'required',
+        'selected_beneficiary' => 'required',
+        'sighted_beneficiary' => 'required',
+    ]);
+
+    $verification = DB::table('verifications')
+        ->insert([
+            'beneficiary_id' => $data['selected_beneficiary'],
+            'are_you_able_to_sight_the_beneficiary' => $data['sighted_beneficiary'],
+        ]);
+
+    return response()->json($verification);
+})->name('submitVerification');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
