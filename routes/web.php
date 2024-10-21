@@ -18,6 +18,8 @@ Route::get('/', function () {
     ]);
 });
 
+Route::inertia('/finished', 'Finished')->name('finished');
+
 Route::get('fetchWards/{local_government}', function ($local_government_id) {
     $options = DB::table('wards')
         ->where('local_government_id', $local_government_id)
@@ -133,6 +135,9 @@ Route::post('submitVerification', function () {
         ]);
 
     return response()->json($verification);
+    // return to_route('finished');
+    // return redirect()
+    // ->route('finished');
 })->name('submitVerification');
 
 Route::get('/dashboard', function () {

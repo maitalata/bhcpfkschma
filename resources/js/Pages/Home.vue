@@ -26,8 +26,6 @@ const wholeForm = reactive({
     formEducatedBeneficiaryAboutBhcpf: null,
 });
 
-
-
 const yesornoSelectBoxOptions = [
     { value: "Yes", label: "Yes" },
     { value: "No", label: "No" },
@@ -246,6 +244,7 @@ const submitVerification = () => {
                             })
                             .then((response) => {
                                 console.log("Verification submitted:", response.data);
+                                router.visit("/finished");
                             })
                             .catch((error) => {
                                 console.error("Error submitting verification:", error);
