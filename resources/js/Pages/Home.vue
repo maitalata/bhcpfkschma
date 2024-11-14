@@ -45,6 +45,17 @@ const trnasportFaresSelectBoxOptions = [
     { value: "Over 2001", label: "Over ₦2001" },
 ];
 
+const eligibleCriteria = [
+    { value: "Pregnant Woman", label: "Pregnant Woman" },
+    { value: "Child Under 5 Years", label: "Child Under 5 Years" },
+    { value: "Chronic Medical Condition", label: "Chronic Medical Condition" },
+    { value: "Elderly", label: "Elderly" },
+    { value: "Person with Disability", label: "Person with Disability" },
+    { value: "Person Living with Sickle Cell Disease", label: "Person Living with Sickle Cell Disease" },
+    { value: "Person Living with HIV", label: "Person Living with HIV" },
+    { value: "Others", label: "Others" },
+];
+
 const selectedLGA = ref(false);
 const hasSelectedWard = ref(false);
 const hasSelectedCommunity = ref(false);
@@ -70,6 +81,9 @@ const beneficiaryWantToChangeFacility = ref([]);
 const primaryReasonForFacilityChange = ref([]);
 const beneficiaryEeverAccessedServiceInAssignedPHC = ref([]);
 const educatedBeneficiaryAboutBhcpf = ref([]);
+const isBeneficiaryEligile = ref([]);
+const whyEligible = ref([]);
+const whyOthers = ref([]);
 
 const nextStep = () => {
     step.value += 1;
@@ -241,6 +255,20 @@ const submitVerification = () => {
                                 community: selectedCommunity.value,
                                 selected_beneficiary: selectedBeneficiaries.value[i],
                                 sighted_beneficiary: sightedBeneficiary.value[i] === "Yes" ? 1 : 0,
+                                reason_for_not_sighting_beneficiary: beneficiaryStatus.value[i] === "Relocated Permanently" || beneficiaryStatus.value[i] === "Cannot be located" || beneficiaryStatus.value[i] === "Dead" ? beneficiaryStatus.value[i] : null,
+                                new_location: newLocation.value[i] === "" ? null : newLocation.value[i],
+                                beneficiary_has_nin: beneficiaryHasNin.value[i] === "Yes" ? 1 : 0,
+                                nin: beneficiaryNin.value[i] === "" ? null : beneficiaryNin.value[i],
+                                tracking_id: beneficiaryTrackingId.value[i] === "" ? null : beneficiaryTrackingId.value[i],
+                                psr_number: beneficiaryPsrNumber.value[i] === "" ? null : beneficiaryPsrNumber.value[i],
+                                kschma_number: beneficiaryKschmaNumber.value[i] === "" ? null : beneficiaryKschmaNumber.value[i],
+                                facility_id: selectedFacility.value[i] === null ? null : selectedFacility.value[i],
+                                trekkable: trekkableInfo.value[i] === "Yes" ? 1 : 0,
+                                transport_fare: transportFareInfo.value[i] === "" ? null : transportFareInfo.value[i],
+                                want_to_change_facility: beneficiaryWantToChangeFacility.value[i] === "Yes" ? 1 : 0,
+                                reason_for_facility_change: primaryReasonForFacilityChange.value[i] === "" ? null : primaryReasonForFacilityChange.value[i],
+                                ever_accessed_service_in_assigned_phc: beneficiaryEeverAccessedServiceInAssignedPHC.value[i] === "Yes" ? 1 : 0,
+                                educated_about_bhcpf: educatedBeneficiaryAboutBhcpf.value[i] === "Yes" ? 1 : 0,
                             })
                             .then((response) => {
                                 console.log("Verification submitted:", response.data);
@@ -401,7 +429,7 @@ const submitVerification = () => {
                         <el-select v-model="selectedBeneficiaries[index]" filterable placeholder="Select"
                             style="width: 240px">
                             <el-option v-for="item in beneficiaries" :key="item.id" :label="`${item.first_name} ${item.surname || ''} ${item.other_name || ''
-                                    }`.trim()
+                                }`.trim()
                                 " :value="item.id" />
                         </el-select>
                     </div>
@@ -577,6 +605,46 @@ const submitVerification = () => {
                                 <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
                                     :value="item.value" />
                             </el-select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-around text-center">
+                        <div class="">
+                            <label for="lga" class="block text-sm font-medium text-gray-700">Is the beneficiary
+                                eligible?
+                            </label>
+                            <el-select v-model="isBeneficiaryEligile[index]" placeholder="Please Select" size="large"
+                                style="width: 240px; color: black" class="text-black">
+                                <el-option v-for="item in yesornoSelectBoxOptions" :key="item.value" :label="item.label"
+                                    :value="item.value" />
+                            </el-select>
+                        </div>
+                    </div>
+
+                    <div v-if="isBeneficiaryEligile[index] === 'Yes'">
+                        <br />
+                        <div class="flex justify-around text-center">
+                            <div class="">
+                                <label for="lga" class="block text-sm font-medium text-gray-700">Why is the beneficiary
+                                    eligible?</label>
+                                <el-select v-model="whyEligible[index]" placeholder="Please Select" size="large"
+                                    style="width: 240px; color: black" class="text-black">
+                                    <el-option v-for="item in eligibleCriteria" :key="item.value" :label="item.label"
+                                        :value="item.value" />
+                                </el-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="whyEligible[index] === 'Others'">
+                        <br />
+                        <div class="flex justify-around text-center">
+                            <div class="">
+                                <label for="lga" class="block text-sm font-medium text-gray-700">Specify Others</label>
+                                <el-input placeholder="Please provide beneficiaries NIN Number" size="large"
+                                    style="width: 240px; color: black" v-model="whyOthers[index]"
+                                    class="text-black" />
+                            </div>
                         </div>
                     </div>
                 </div>

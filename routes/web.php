@@ -88,7 +88,7 @@ Route::post('submitHousehold', function () {
         'name' => 'required',
         'community_id' => 'required',
     ]);
-    
+
         $household = DB::table('households')
             ->insertGetId([
                 'name' => $data['name'],
@@ -126,12 +126,35 @@ Route::post('submitVerification', function () {
         'community' => 'required',
         'selected_beneficiary' => 'required',
         'sighted_beneficiary' => 'required',
+        'reason_for_not_sighting_beneficiary' => 'nullable',
+        'new_location' => 'nullable',
+        'beneficiary_has_nin' => 'nullable',
+        'nin' => 'nullable',
+        'tracking_id' => 'nullable',
+        'psr_number' => 'nullable',
+        'kschma_number' => 'nullable',
+        'facility_id' => 'nullable',
+        'trekkable' => 'nullable',
+        'transport_fare' => 'nullable',
+        'want_to_change_facility' => 'nullable',
+        'reason_for_facility_change' => 'nullable',
+        'ever_accessed_service_in_assigned_phc' => 'nullable',
+        'educated_about_bhcpf' => 'nullable',
     ]);
 
     $verification = DB::table('verifications')
         ->insert([
             'beneficiary_id' => $data['selected_beneficiary'],
-            'are_you_able_to_sight_the_beneficiary' => $data['sighted_beneficiary'],
+            'are_you_able_to_sight_the_beneficiary' => $data['sighted_beneficiary'] ?? null,
+            'reason_for_not_sighting_beneficiary' => $data['reason_for_not_sighting_beneficiary'] ?? null,
+            'new_location_of_beneficiary' => $data['new_location'] ?? null,
+            'did_the_beneficiary_has_nin' => $data['beneficiary_has_nin'] ?? null,
+            'is_the_distance_to_assigned_phc_trekkable' => $data['trekkable'] ?? null,
+            'transport_fare_to_facility' => $data['transport_fare'] ?? null,
+            'does_the_beneficiary_want_to_change_their_assigned_facility' => $data['want_to_change_facility'] ?? null,
+            'what_is_the_primary_reason_for_the_change_of_facility' => $data['reason_for_facility_change'] ?? null,
+            'beneficiary_ever_accessed_healthcare_services_in_assigned_phc' => $data['ever_accessed_service_in_assigned_phc'] ?? null,
+            'did_you_educate_the_beneficiary_about_bhcpf_during_the_exercise' => $data['educated_about_bhcpf'] ?? null,
         ]);
 
     return response()->json($verification);
